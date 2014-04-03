@@ -4,7 +4,9 @@
 
 package gxl
 
-import ()
+import (
+	"strconv"
+)
 
 /* ________________________________________________________________________________
    Int values
@@ -23,7 +25,7 @@ type Int struct {
 // }
 
 func (i *Int) String() string {
-	return string(i.Int)
+	return strconv.Itoa(i.Int)
 }
 
 func (i *Int) Set(value int) *Int {
