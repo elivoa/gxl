@@ -5,16 +5,36 @@ import (
 	"time"
 )
 
+const (
+	EN uint = iota
+	CN
+)
+
+var Locale = CN // EN | CN
+
+var i18n = []map[string]string{
+	// EN
+	map[string]string{
+		"today":    "Today",
+		"yestoday": "Yestoday",
+	},
+	// CN
+	map[string]string{
+		"today":    "今天",
+		"yestoday": "Yestoday",
+	},
+}
+
 func PrettyDay(then time.Time) string {
 	y, m, d := then.Date()
 	y2, m2, d2 := time.Now().Date()
 	if y == y2 && m == m2 && d == d2 {
-		return "今天"
+		return i18n[Locale]["today"] // "今天"
 	}
 	then2 := time.Now().AddDate(0, 0, -1)
 	y2, m2, d2 = then2.Date()
 	if y == y2 && m == m2 && d == d2 {
-		return "昨天"
+		return i18n[Locale]["yestoday"] // 昨天"
 	}
 	return then.Format("2006-01-02")
 }
