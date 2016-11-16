@@ -1,5 +1,10 @@
 package gxl
 
+/**
+
+  Add Timezone support. 2016-11-15
+
+*/
 import (
 	"fmt"
 	"time"
@@ -10,7 +15,8 @@ const (
 	CN
 )
 
-var Locale = CN // EN | CN
+var Locale = CN       // EN | CN
+var Timezone int = +0 // Timezone default UTC time
 
 var i18n = []map[string]string{
 	// EN
@@ -21,7 +27,7 @@ var i18n = []map[string]string{
 	// CN
 	map[string]string{
 		"today":    "今天",
-		"yestoday": "Yestoday",
+		"yestoday": "昨天",
 	},
 }
 
@@ -149,4 +155,39 @@ func HumanizeTimeCN(then time.Time) string {
 		return fmt.Sprintf("1 年%s", lbl)
 	}
 	return then.String()
+}
+
+// Timezone related
+func LocalTime(t time.Time) time.Time {
+	return ToLocalTime(t, Timezone)
+}
+
+func ToLocalTime(t time.Time, timezone int) time.Time {
+	return t.Add(time.Hour * time.Duration(timezone))
+}
+
+// 返回给定时间之前的时间点到当天结束的UTC时间范围。
+// 例如 0 0 0， 返回当天的时间范围。使用的时候注意单边包含。另一边不包含的方式查询。
+// 例如 0 0 -1, 返回最近两天的时间点。
+func NatureTimeRangeUTC(years, months, days int) (start, end time.Time) {
+	natureEnd := time.Now().AddDate(0, 0, 1).UTC().Truncate(time.Hour * 24).
+		Add(time.Hour * time.Duration(-Timezone))
+	natureStart := natureEnd.AddDate(years, months, days-1)
+	return natureStart, natureEnd
+}
+
+func NatureTimeTodayEndUTC() (t time.Time) {
+	return time.Now().AddDate(0, 0, 1).UTC().Truncate(time.Hour * 24).
+		Add(time.Hour * time.Duration(-Timezone))
+}
+
+// 返回给定时间之前的时间点到当天结束的时间范围。
+func NatureTimeRange(years, months, days int) (start, end time.Time) {
+	natureEnd := time.Now().AddDate(0, 0, 1).UTC().Truncate(time.Hour * 24)
+	natureStart := natureEnd.AddDate(years, months, days-1)
+	return natureStart, natureEnd
+}
+
+func NatureTimeTodayEnd() (t time.Time) {
+	return time.Now().AddDate(0, 0, 1).UTC().Truncate(time.Hour * 24)
 }
