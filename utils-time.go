@@ -199,3 +199,27 @@ func NatureTimeRange(years, months, days int) (start, end time.Time) {
 func NatureTimeTodayEnd() (t time.Time) {
 	return time.Now().AddDate(0, 0, 1).UTC().Truncate(time.Hour * 24)
 }
+
+// new time ranges
+
+func EndOfTodayUTC() (t time.Time) {
+	year, month, day := time.Now().Date()
+	return time.Date(year, month, day, 23, 59, 59, 999999999, time.UTC)
+}
+
+func StartOfTomorrowUTC() (t time.Time) {
+	year, month, day := time.Now().AddDate(0, 0, 1).Date()
+	return time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
+}
+
+func UntilEndOfTodayRangeUTC(days int) (start, end time.Time) {
+	year, month, day := time.Now().AddDate(0, 0, -(days - 1)).Date()
+	startTime := time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
+	return startTime, EndOfTodayUTC()
+}
+
+func UntilStartOfTomorrowRangeUTC(days int) (start, end time.Time) {
+	year, month, day := time.Now().AddDate(0, 0, -(days - 1)).Date()
+	startTime := time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
+	return startTime, StartOfTomorrowUTC()
+}
