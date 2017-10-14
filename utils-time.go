@@ -176,6 +176,14 @@ func NatureTimeRangeUTC(years, months, days int) (start, end time.Time) {
 	return natureStart, natureEnd
 }
 
+func NatureTimeTodayRangeUTC(day time.Time) (start, end time.Time) {
+	natureEnd := day.AddDate(0, 0, 1).UTC().Truncate(time.Hour * 24).
+		Add(time.Hour * time.Duration(-Timezone))
+	natureStart := day.UTC().Truncate(time.Hour * 24).
+		Add(time.Hour * time.Duration(-Timezone))
+	return natureStart, natureEnd
+}
+
 func NatureTimeTodayEndUTC() (t time.Time) {
 	return time.Now().AddDate(0, 0, 1).UTC().Truncate(time.Hour * 24).
 		Add(time.Hour * time.Duration(-Timezone))
